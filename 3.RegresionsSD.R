@@ -18,8 +18,8 @@ library(sandwich)
 # rm(supers)
 
 
-############################################
-#### (1) Regressions for whole database ####
+####################################################
+######## (1) Regressions for whole database ########
 
 # Load database
 #dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
@@ -28,8 +28,7 @@ dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence
 head(dbF)
 
 
-## Run base regression 
-
+#### Previous operations  
 dbF$Product <- as.factor(dbF$Product)
 dbF$Super <- dbF$moda <- dbF$chain.number <- dbF$city.number <- dbF$X_UTM <- dbF$Y_UTM <-  NULL
 dbF <- na.omit(dbF)
@@ -41,37 +40,31 @@ dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
 dbF <- dbF[dbF$Time <90,]
 
 
+#### Run base regressions
 #reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
 reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
 summary(reg1b)
-
-## Test for autocorrelation
-
+# Test for autocorrelation
 reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
 reg1C
 
-## with competition and variety
-
-
-reg4b <- plm(SD.RCompVar ~ Time + Time2 +
-             PAve.RCompVar,dbF, index=("Product"))
-
+#### With competition and variety
+reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
 ## Test for autocorrelation
-
 reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
 reg4C
 
 
-#### Otra prueba por cluster !!!
+#### Clustered standard errors
 
+### Base regression
 reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
 vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
 reg1C <- coeftest(reg1, vcov_R1)
 reg1C
 summary(reg1)
 
-## with competition and variety
-
+### Filtered by competition and variety
 reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + as.factor(Product), data = dbF)
 vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
 reg2C <- coeftest(reg2, vcov_R2)
@@ -182,8 +175,8 @@ print(reg2C, include.rownames=F)
 sink()
 
 
-##################################################
-#### (3) Regressions for supermarkets in 2007 ####
+##########################################################
+######## (3) Regressions for supermarkets in 2007 ########
 
 # Load database
 dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
@@ -192,8 +185,7 @@ dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.Res
 head(dbF)
 
 
-## Run base regression 
-
+#### Previous operations
 dbF$Product <- as.factor(dbF$Product)
 dbF$Super <- dbF$moda <- dbF$chain.number <- dbF$city.number <- dbF$X_UTM <- dbF$Y_UTM <-  NULL
 dbF <- na.omit(dbF)
@@ -204,50 +196,46 @@ dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
 #dbF$Time4 <- dbF$Time2 * dbF$Time2
 dbF <- dbF[dbF$Time <90,]
 dbF$SD.CompVar <- dbF$SD.CompVar * 100
+ 
 
+#### Base regression 
 #reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
 reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
 summary(reg1b)
-
-## Test for autocorrelation
-
+# Test for autocorrelation
 reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
 reg1C
 
-## with competition and variety
-
-
-reg4b <- plm(SD.RCompVar ~ Time + Time2 +
-               PAve.RCompVar,dbF, index=("Product"))
-
-## Test for autocorrelation
-
+#### With competition and variety
+reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
+# Test for autocorrelation
 reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
 reg4C
 
 
-#### Otra prueba por cluster !!!
+#### Clustered standard errors
 
+### Base regression 
 reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
 vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
 reg1C <- coeftest(reg1, vcov_R1)
 reg1C
 summary(reg1)
 
+### Filtered by competition and variety
+reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + as.factor(Product), data = dbF)
+vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
+reg2C <- coeftest(reg2, vcov_R2)
+reg2C
+summary(reg2)
 
-## for competition and variety
 
+### Competition and variety on the LHS
 reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + as.factor(Product), data = dbF)
 vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
 reg5C <- coeftest(reg5, vcov_R5)
 reg5C
 summary(reg5)
-
-reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
-reg1C <- coeftest(reg1, vcov_R1)
-reg1C
-summary(reg1)
 
 
 
@@ -272,18 +260,17 @@ print(reg2C, include.rownames=F)
 sink()
 
 
-################################################################
-#### (4) Regressions for supermarkets in 2007 in Montevideo ####
+########################################################################
+######## (4) Regressions for supermarkets in 2007 in Montevideo ########
 
 # Load database
-#dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
-dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
+dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginMdeo.csv", data.table = F)
+#dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
 
 head(dbF)
 
 
-## Run base regression 
-
+##### Previous operations
 dbF$Product <- as.factor(dbF$Product)
 dbF$Super <- dbF$moda <- dbF$chain.number <- dbF$city.number <- dbF$X_UTM <- dbF$Y_UTM <-  NULL
 dbF <- na.omit(dbF)
@@ -295,42 +282,47 @@ dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
 dbF <- dbF[dbF$Time <90,]
 
 
+#### Base regression 
 #reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
 reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
 summary(reg1b)
-
-## Test for autocorrelation
-
+# Test for autocorrelation
 reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
 reg1C
 
-## with competition and variety
 
-
-reg4b <- plm(SD.RCompVar ~ Time + Time2 +
-               PAve.RCompVar,dbF, index=("Product"))
-
-## Test for autocorrelation
-
+#### Prices filtered by competition and variety
+reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
+# Test for autocorrelation
 reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
 reg4C
 
 
-#### Otra prueba por cluster !!!
+#### Clustered standard errors
 
+### Base regression 
 reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
 vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
 reg1C <- coeftest(reg1, vcov_R1)
 reg1C
 summary(reg1)
 
-## with competition and variety
-
+### Filtered by competition and variety
 reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + as.factor(Product), data = dbF)
 vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
 reg2C <- coeftest(reg2, vcov_R2)
 reg2C
 summary(reg2)
+
+
+### Competition and variety on the LHS
+reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + as.factor(Product), data = dbF)
+vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
+reg5C <- coeftest(reg5, vcov_R5)
+reg5C
+summary(reg5)
+
+
 
 #sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
 sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
