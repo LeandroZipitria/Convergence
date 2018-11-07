@@ -442,5 +442,5 @@ colnames(db)
 
 # Save database
 write.csv(db, "/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginMdeo.csv", row.names = FALSE)
-write.csv(db, "C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginMdeo.csv", row.names = FALSE)
+#write.csv(db, "C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginMdeo.csv", row.names = FALSE)
 
