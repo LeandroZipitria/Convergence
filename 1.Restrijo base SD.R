@@ -3,7 +3,7 @@ library("data.table") # CASA CASA
 library("dplyr")
 
 
-setwd("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Rutinas/")
+#setwd("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Rutinas/")
 
 
 #### (1) Create restricted database: all data ####
@@ -92,6 +92,20 @@ db <- db %>%
   mutate(PAve.RSuperCCCV = ave(RSuperCCCV)) 
 
 
+## 8) Variedad y competencia (dispersion)
+
+db$CompVar <- db$competition + db$variety
+
+db <- db %>%
+  group_by(Product, Time) %>%
+  mutate(SD.CompVar = sd(CompVar)) 
+
+db <- db %>%
+  group_by(Product, Time) %>%
+  mutate(Ave.CompVar = ave(CompVar)) 
+
+
+
 ### Restrict database
 
 db <- distinct(db, Product, Time, .keep_all = TRUE) # pick one observation by month
@@ -104,7 +118,7 @@ write.csv(db, "/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence
 #### (2) Create restricted database: Montevideo ####
 
 # Load database
-db <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsMontevideo.csv", data.table = F)
+db <- get(load("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsMontevideo.Rdata"))
 head(db)
 
 # Create Time square
@@ -185,6 +199,18 @@ db <- db %>%
   group_by(Product, Time) %>%
   mutate(PAve.RSuperCCCV = ave(RSuperCCCV)) 
 
+
+## 8) Variedad y competencia (dispersion)
+
+db$CompVar <- db$competition + db$variety
+
+db <- db %>%
+  group_by(Product, Time) %>%
+  mutate(SD.CompVar = sd(CompVar)) 
+
+db <- db %>%
+  group_by(Product, Time) %>%
+  mutate(Ave.CompVar = ave(CompVar))
 
 
 ### Restrict database
@@ -199,7 +225,7 @@ write.csv(db, "/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence
 #### (3) Create restricted database: Original supermarkets ####
 
 # Load database
-db <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsOrigSuper.csv", data.table = F)
+db <- get(load("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsOrigSuper.Rdata"))
 head(db)
 
 # Create Time square
@@ -279,6 +305,19 @@ db <- db %>%
 db <- db %>%
   group_by(Product, Time) %>%
   mutate(PAve.RSuperCCCV = ave(RSuperCCCV)) 
+
+
+## 8) Variedad y competencia (dispersion)
+
+db$CompVar <- db$competition + db$variety
+
+db <- db %>%
+  group_by(Product, Time) %>%
+  mutate(SD.CompVar = sd(CompVar)) 
+
+db <- db %>%
+  group_by(Product, Time) %>%
+  mutate(Ave.CompVar = ave(CompVar))
 
 
 
@@ -295,8 +334,8 @@ write.csv(db, "/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence
 #### (4) Create restricted database: Original in Montevideo ####
 
 # Load database
-db <- get(load("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResiduals.Rdata"))
-db <- get(load("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsOrigSuper.Rdata"))
+db <- get(load("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsOrigSuper.Rdata"))
+#db <- get(load("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsOrigSuper.Rdata"))
 
 #db <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResiduals.csv", data.table = F)
 head(db)
@@ -381,6 +420,19 @@ db <- db %>%
 db <- db %>%
   group_by(Product, Time) %>%
   mutate(PAve.RSuperCCCV = ave(RSuperCCCV)) 
+
+
+## 8) Variedad y competencia (dispersion)
+
+db$CompVar <- db$competition + db$variety
+
+db <- db %>%
+  group_by(Product, Time) %>%
+  mutate(SD.CompVar = sd(CompVar)) 
+
+db <- db %>%
+  group_by(Product, Time) %>%
+  mutate(Ave.CompVar = ave(CompVar))
 
 
 ### Restrict database
