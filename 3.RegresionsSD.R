@@ -229,9 +229,30 @@ reg2C <- coeftest(reg2, vcov_R2)
 reg2C
 summary(reg2)
 
+### Base regression control for time 44
+reg1 <- lm(SD.Base ~ Time + Time2 + PAve + P44 +as.factor(Product), data = dbF)
+vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
+reg1C <- coeftest(reg1, vcov_R1)
+reg1C
+summary(reg1)
+
+### Filtered by competition and variety, control for time 44
+reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + P44 + as.factor(Product), data = dbF)
+vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
+reg2C <- coeftest(reg2, vcov_R2)
+reg2C
+summary(reg2)
+
 
 ### Competition and variety on the LHS
 reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + as.factor(Product), data = dbF)
+vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
+reg5C <- coeftest(reg5, vcov_R5)
+reg5C
+summary(reg5)
+
+### Competition and variety on the LHS, control for time 44
+reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + P44 + as.factor(Product), data = dbF)
 vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
 reg5C <- coeftest(reg5, vcov_R5)
 reg5C
