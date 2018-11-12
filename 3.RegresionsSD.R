@@ -198,19 +198,19 @@ dbF <- dbF[dbF$Time <90,]
 dbF$SD.CompVar <- dbF$SD.CompVar * 100
  
 
-#### Base regression 
-#reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
-summary(reg1b)
-# Test for autocorrelation
-reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-reg1C
-
-#### With competition and variety
-reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
-# Test for autocorrelation
-reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-reg4C
+# #### Base regression 
+# #reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
+# reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
+# summary(reg1b)
+# # Test for autocorrelation
+# reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
+# reg1C
+# 
+# #### With competition and variety
+# reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
+# # Test for autocorrelation
+# reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
+# reg4C
 
 
 #### Clustered standard errors
@@ -303,20 +303,20 @@ dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
 dbF <- dbF[dbF$Time <90,]
 
 
-#### Base regression 
-#reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
-summary(reg1b)
-# Test for autocorrelation
-reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-reg1C
-
-
-#### Prices filtered by competition and variety
-reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
-# Test for autocorrelation
-reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-reg4C
+# #### Base regression 
+# #reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
+# reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
+# summary(reg1b)
+# # Test for autocorrelation
+# reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
+# reg1C
+# 
+# 
+# #### Prices filtered by competition and variety
+# reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
+# # Test for autocorrelation
+# reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
+# reg4C
 
 
 #### Clustered standard errors
@@ -335,6 +335,20 @@ reg2C <- coeftest(reg2, vcov_R2)
 reg2C
 summary(reg2)
 
+### Base regression control for time 44
+reg1 <- lm(SD.Base ~ Time + Time2 + PAve + P44 +as.factor(Product), data = dbF)
+vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
+reg1C <- coeftest(reg1, vcov_R1)
+reg1C
+summary(reg1)
+
+### Filtered by competition and variety, control for time 44
+reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + P44 + as.factor(Product), data = dbF)
+vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
+reg2C <- coeftest(reg2, vcov_R2)
+reg2C
+summary(reg2)
+
 
 ### Competition and variety on the LHS
 reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + as.factor(Product), data = dbF)
@@ -343,6 +357,12 @@ reg5C <- coeftest(reg5, vcov_R5)
 reg5C
 summary(reg5)
 
+### Competition and variety on the LHS, control for time 44
+reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + P44 + as.factor(Product), data = dbF)
+vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
+reg5C <- coeftest(reg5, vcov_R5)
+reg5C
+summary(reg5)
 
 
 #sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)

@@ -64,23 +64,17 @@ supers <- read.csv("~/Dropbox/Docs/Investigacion/2016.Distance and quality/Bases
 colnames(supers)
 supers <- supers[,c(1,8)]
 dbF <- merge(dbF, supers, by = "Super")
-
-z <- c(1,4)
-dbF1 <- dbF[dbF$Super %in% z | dbF$Time %in% z,]
-dbF <- dbFPosta
-rm(dbF1, dbFP, dbFPosta) 
+rm(supers)
 
 dbF$Inst.Var <- dbF$Inst.Comp <- 0
 
-
-for (i in unique(dbF$Super)) {
-  for (t in unique(dbF$Time)) {
-    for (p in unique(dbF$Product)) {
-      Sub <- subset(dbF, dbF$Product == p & dbF$city.number == x &
-                    dbF$Time == t)
-      if (nrow(Sub[Sub$Super == i,]) < 1) {next}
-      if (Sub[Sub$Super == i,]$city.number != 30) {
+for (t in unique(dbF$Time)) {
+  for (p in unique(dbF$Product)) {
+    for (i in unique(dbF$Super)) {
+      if (dbF[dbF$Super == i,]$city.number != 30) {
         x <- unique(get("dbF")[dbF$Super == i,]$city.number)
+        Sub <- dbF[dbF$Product == p & dbF$city.number == x & dbF$Time == t,]
+        if (nrow(Sub[Sub$Super == i,]) < 1) {next}
         dbF[which(dbF$Super == i & dbF$Time == t & dbF$Product == p),]$Inst.Comp <- 
           mean(Sub[Sub$Super != i,]$competition)
         dbF[which(dbF$Super == i & dbF$Time == t & dbF$Product == p),]$Inst.Var <-
@@ -88,6 +82,8 @@ for (i in unique(dbF$Super)) {
       }
       else {
         x <- unique(get("dbF")[dbF$Super == i,]$ccz)
+        Sub <- dbF[dbF$Product == p & dbF$ccz == x & dbF$Time == t,]
+        if (nrow(Sub[Sub$Super == i,]) < 1) {next}
         dbF[which(dbF$Super == i & dbF$Time == t & dbF$Product == p),]$Inst.Comp <- 
           mean(Sub[Sub$Super != i,]$competition)
         dbF[which(dbF$Super == i & dbF$Time == t & dbF$Product == p),]$Inst.Var <-
