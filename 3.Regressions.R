@@ -6,6 +6,7 @@ library("data.table") ## Fing
 library("dplyr") ## Fing
 library("lmtest")
 library("lfe")
+library(stargazer)
 
 #setwd("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Rutinas/")
 
@@ -20,6 +21,8 @@ dbF$Super <- as.factor(dbF$Super)
 dbF$Category <-as.factor(dbF$Category)
 dbF <- dbF[dbF$Time < 90,]
 dbF$Time <-as.factor(dbF$Time)
+dbF$variety <- as.factor(dbF$variety)
+dbF$competition <- as.factor(dbF$competition)
 #dbF$competition2 <- dbF$competition * dbF$competition
 #dbF$variety2 <- dbF$variety * dbF$variety
 
@@ -28,9 +31,11 @@ dbF$Time <-as.factor(dbF$Time)
 
 
 # con efectos fijos por super, categoría, super tiempo y categoría tiempo 
-areg1 <-   summary(felm(moda ~ variety + competition |Super * Time + Category * Time| 0, dbF, 
-                        exactDOF = exactDOF = 2046404)) ## ok
-areg1
+areg1 <- felm(moda ~ variety + competition |Super * Time + Category * Time| 0, dbF, 
+                        exactDOF = 2046404) ## ok
+areg11 <- summary(areg1)
+
+stargazer(areg1, title="Results", align=TRUE)
 
 areg1b <- summary(felm(moda ~ variety + competition + variety2 + competition2
                        |Super * Time + Category * Time| 0, dbF, exactDOF = 2046404)) ## ok
