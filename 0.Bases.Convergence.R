@@ -33,7 +33,7 @@ dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(cit
 
 
 ## Save database
-save(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResiduals.Rdata")
+saveRDS(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResiduals.rds")
 rm (list = ls( ))
 
 
@@ -66,7 +66,7 @@ dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number)
 
 
 ## Save database
-save(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsMontevideo.Rdata")
+saveRDS(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsMontevideo.rds")
 rm (list = ls( )) 
 
 
@@ -100,7 +100,7 @@ dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(cit
 
 
 ## Save database
-save(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsOrigSuper.Rdata")
+saveRDS(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsOrigSuper.rds")
 rm (list = ls( )) 
 
 
@@ -137,5 +137,5 @@ dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number)
                               + as.factor(competition) + as.factor(variety), data = dbM))
 
 ## Save database
-save(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsOrigSuperMdeo.Rdata")
+saveRDS(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsOrigSuperMdeo.rds")
 rm (list = ls( ))
