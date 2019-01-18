@@ -9,6 +9,7 @@ library("dplyr", lib.loc = .libPaths('/clusteruy/home/leandroz/R/lib'))
 ## Load database
 dbM <- fread("/clusteruy/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
 
+
 ## 1) Filter: Supermarket
 dbM$RSuper <-residuals(lm(moda ~ 0 + as.factor(Super), data = dbM))
 
@@ -74,7 +75,6 @@ rm (list = ls( ))
 ## Load database
 dbM <- fread("/clusteruy/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
 OS <- unique(dbM[dbM$Year == 2007,]$Super)
-
 dbM <- dbM[dbM$Super %in% OS,]
 
 ## 1) Filter: Supermarket
@@ -108,6 +108,7 @@ rm (list = ls( ))
 ##### Create databases for original supermarkets in Montevideo ####
 
 ## Load database
+
 dbM <- fread("/clusteruy/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
 OS <- unique(dbM[dbM$Year == 2007,]$Super)
 
