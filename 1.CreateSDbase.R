@@ -1,12 +1,12 @@
-#library("data.table", lib.loc="~/R/lib/") # FING FING
-library("data.table") # CASA CASA
+##########################################################################
+###### Description; create SD, average price, and restrict database ###### 
+
+### Libraries required
+library("data.table")
 library("dplyr")
 
 
-#setwd("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Rutinas/")
-
-
-###### Define functions ####
+###### Define functions ######
 
 functions <- function(){
 
@@ -21,7 +21,7 @@ functions <- function(){
     group_by(Product, Time) %>%
     mutate(SD.Base = sd(moda)) 
 
-## 2) filtrado efecto super
+## 2) Filtered by supermarket
   db <- db %>%
     group_by(Product, Time) %>%
     mutate(SD.RSuper = sd(RSuper)) 
@@ -29,7 +29,7 @@ functions <- function(){
     group_by(Product, Time) %>%
     mutate(PAve.RSuper = ave(RSuper))
 
-## 3) filtrado efecto super + variedad + competencia
+## 3) Filtered by supermarket, competition, and same producer
   db <- db %>%
     group_by(Product, Time) %>%
     mutate(SD.RSuperCV = sd(RSuperCV)) 
@@ -37,7 +37,7 @@ functions <- function(){
     group_by(Product, Time) %>%
     mutate(PAve.RSuperCV = ave(RSuperCV)) 
 
-## 4) filtrado competencia + variedad
+## 4) Filtered by competitor and same producer
   db <- db %>%
     group_by(Product, Time) %>%
     mutate(SD.RCompVar = sd(RCompVar)) 
@@ -46,7 +46,7 @@ functions <- function(){
     group_by(Product, Time) %>%
     mutate(PAve.RCompVar = ave(RCompVar))
 
-## 5) Filtrado super + cadena + ciudad
+## 5) Filtered by supermarket, chain, and city
   db <- db %>%
     group_by(Product, Time) %>%
     mutate(SD.RSuperCC = sd(RSuperCC)) 
@@ -55,7 +55,7 @@ functions <- function(){
     group_by(Product, Time) %>%
     mutate(PAve.RSuperCC = ave(RSuperCC))
 
-## 6) Filtrado por todo
+## 6) Filtered by chain, city, supermarket, competition, and same producer
   db <- db %>%
     group_by(Product, Time) %>%
     mutate(SD.RSuperTodo = sd(RSuperTodo)) 
@@ -64,7 +64,7 @@ functions <- function(){
     group_by(Product, Time) %>%
     mutate(PAve.RSuperTodo = ave(RSuperTodo))
 
-## 7) Filtrado por competencia + variedad + chain + ciudad
+## 7) Filtered by competition, same producer, chain, and city
   db <- db %>%
     group_by(Product, Time) %>%
     mutate(SD.RSuperCCCV = sd(RSuperCCCV)) 
@@ -73,7 +73,7 @@ functions <- function(){
     group_by(Product, Time) %>%
     mutate(PAve.RSuperCCCV = ave(RSuperCCCV)) 
 
-## 8) Variedad y competencia (dispersion)
+## 8) Calculate variable sum of competition and same producer (dispersion)
   db$CompVar <- db$competition + db$variety
   
   db <- db %>%
