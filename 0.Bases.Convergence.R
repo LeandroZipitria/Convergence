@@ -1,13 +1,22 @@
 unlink(".RData") 
 
+<<<<<<< HEAD
 library("data.table", lib.loc = .libPaths('/clusteruy/home/leandroz/R/lib'))
 library("dplyr", lib.loc = .libPaths('/clusteruy/home/leandroz/R/lib'))
+=======
+library("data.table", lib.loc = .libPaths('~/R/lib'))
+library("dplyr", lib.loc = .libPaths('~/R/lib'))
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 
 
 ##### Create database for whole data ####
 
 ## Load database
+<<<<<<< HEAD
 dbM <- fread("/clusteruy/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
+=======
+dbM <- fread("/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 
 ## 1) Filter: Supermarket
 dbM$RSuper <-residuals(lm(moda ~ 0 + as.factor(Super), data = dbM))
@@ -32,14 +41,22 @@ dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(cit
 
 
 ## Save database
+<<<<<<< HEAD
 save(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResiduals.Rdata")
+=======
+save(dbM, file = "/home/leandroz/Bases/Convergence/2018BaseResiduals.Rdata")
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 rm (list = ls( ))
 
 
 ##### Create databases for Montevideo ####
 
 ## Load database
+<<<<<<< HEAD
 dbM <- fread("/clusteruy/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
+=======
+dbM <- fread("/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 dbM <- dbM[dbM$depto.number == 10,] # Number 10 is Montevideo
 
 ## 1) Filter: Supermarket
@@ -65,14 +82,22 @@ dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(cit
 
 
 ## Save database
+<<<<<<< HEAD
 save(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsMontevideo.Rdata")
+=======
+save(dbM, file = "/home/leandroz/Bases/Convergence/2018BaseResidualsMontevideo.Rdata")
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 rm (list = ls( )) 
 
 
 ##### Create databases for original supermarkets ####
 
 ## Load database
+<<<<<<< HEAD
 dbM <- fread("/clusteruy/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
+=======
+dbM <- fread("/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 OS <- unique(dbM[dbM$Year == 2007,]$Super)
 
 dbM <- dbM[dbM$Super %in% OS,]
@@ -100,7 +125,11 @@ dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(cit
 
 
 ## Save database
+<<<<<<< HEAD
 save(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsOrigSuper.Rdata")
+=======
+save(dbM, file = "/home/leandroz/Bases/Convergence/2018BaseResidualsOrigSuper.Rdata")
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 rm (list = ls( )) 
 
 
@@ -108,7 +137,11 @@ rm (list = ls( ))
 ##### Create databases for original supermarkets in Montevideo ####
 
 ## Load database
+<<<<<<< HEAD
 dbM <- fread("/clusteruy/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
+=======
+dbM <- fread("/home/leandroz/Bases/Convergence/2018_dbase_with_super.csv", data.table = F)
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 OS <- unique(dbM[dbM$Year == 2007,]$Super)
 
 dbM <- dbM[dbM$Super %in% OS,]
@@ -136,5 +169,9 @@ dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(cit
                               + as.factor(competition) + as.factor(variety), data = dbM))
 
 ## Save database
+<<<<<<< HEAD
 save(dbM, file = "/clusteruy/home/leandroz/Bases/Convergence/2018BaseResidualsOrigSuperMdeo.Rdata")
+=======
+save(dbM, file = "/home/leandroz/Bases/Convergence/2018BaseResidualsOrigSuperMdeo.Rdata")
+>>>>>>> ce4a202398905b893133c084235fdf5c483ff24d
 rm (list = ls( ))
