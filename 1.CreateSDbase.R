@@ -8,8 +8,9 @@ library("dplyr")
 
 ###### Define functions ####
 
-# Create Time square
 functions <- function(){
+
+## Create Time square
   db$Time2 <- db$Time * db$Time 
 
 ## 1) Non.filtered data
