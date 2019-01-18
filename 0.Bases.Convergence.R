@@ -52,16 +52,16 @@ dbM$RSuperCV <-residuals(lm(moda ~ 0 + as.factor(Super) + as.factor(competition)
 ## 3) Filter: competition + same producer
 dbM$RCompVar <-residuals(lm(moda ~ as.factor(competition) + as.factor(variety), data = dbM))
 
-## 4) Filter: Supermarket + chain + city
+## 4) Filter: Supermarket + chain
 dbM$RSuperCC <-residuals(lm(moda ~ 0 + as.factor(Super) +
-                              as.factor(chain.number) + as.factor(city.number), data = dbM))
+                              as.factor(chain.number), data = dbM))
 
-## 5) Filter: Supermarket + chain + city + competition + same producer
+## 5) Filter: Supermarket + chain + competition + same producer
 dbM$RSuperTodo <-residuals(lm(moda ~ 0 + as.factor(Super) + as.factor(chain.number) 
-                              + as.factor(city.number) + as.factor(competition) + as.factor(variety), data = dbM))
+                              + as.factor(competition) + as.factor(variety), data = dbM))
 
-## 6) Filter: Chain + city + competition + same producer
-dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(city.number)
+## 6) Filter: Chain + competition + same producer
+dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number)
                               + as.factor(competition) + as.factor(variety), data = dbM))
 
 
@@ -124,16 +124,16 @@ dbM$RSuperCV <-residuals(lm(moda ~ 0 + as.factor(Super) + as.factor(competition)
 ## 3) Filter: competition + same producer
 dbM$RCompVar <-residuals(lm(moda ~ as.factor(competition) + as.factor(variety), data = dbM))
 
-## 4) Filter: Supermarket + chain + city
+## 4) Filter: Supermarket + chain
 dbM$RSuperCC <-residuals(lm(moda ~ 0 + as.factor(Super) +
-                              as.factor(chain.number) + as.factor(city.number), data = dbM))
+                              as.factor(chain.number), data = dbM))
 
-## 5) Filter: Supermarket + chain + city + competition + same producer
+## 5) Filter: Supermarket + chain + competition + same producer
 dbM$RSuperTodo <-residuals(lm(moda ~ 0 + as.factor(Super) + as.factor(chain.number) 
-                              + as.factor(city.number) + as.factor(competition) + as.factor(variety), data = dbM))
+                              + as.factor(competition) + as.factor(variety), data = dbM))
 
-## 6) Filter: Chain + city + competition + same producer
-dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(city.number)
+## 6) Filter: Chain + competition + same producer
+dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number)
                               + as.factor(competition) + as.factor(variety), data = dbM))
 
 ## Save database
