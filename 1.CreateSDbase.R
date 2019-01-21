@@ -67,11 +67,11 @@ functions <- function(){
 ## 7) Filtered by competition, same producer, chain, and city
   db <- db %>%
     group_by(Product, Time) %>%
-    mutate(SD.RSuperCCCV = sd(RSuperCCCV)) 
+    mutate(SD.R_CCCV = sd(R_CCCV)) 
   
   db <- db %>%
     group_by(Product, Time) %>%
-    mutate(PAve.RSuperCCCV = ave(RSuperCCCV)) 
+    mutate(PAve.R_CCCV = ave(R_CCCV)) 
 
 ## 8) Calculate variable sum of competition and same producer (dispersion)
   db$CompVar <- db$competition + db$variety

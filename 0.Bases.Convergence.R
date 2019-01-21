@@ -31,7 +31,7 @@ functAll <- function(){
                                 + as.factor(city.number) + as.factor(competition) + as.factor(variety), data = dbM))
   
   ## 6) Filter: Chain + city + competition + same producer
-  dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(city.number)
+  dbM$R_CCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) + as.factor(city.number)
                                 + as.factor(competition) + as.factor(variety), data = dbM))
 }
 
@@ -85,7 +85,7 @@ functMdeo <- function(){
                                 + as.factor(competition) + as.factor(variety), data = dbM))
   
   ## 6) Filter: Chain + competition + same producer
-  dbM$RSuperCCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) 
+  dbM$R_CCCV <-residuals(lm(moda ~ 0 + as.factor(chain.number) 
                                 + as.factor(competition) + as.factor(variety), data = dbM))
 }
 
