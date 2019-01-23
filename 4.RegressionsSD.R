@@ -74,10 +74,16 @@ reg6 <- felm(SD.RSuperCV ~ Time + Time2 + PAve.RSuperCV | Product | 0 | Product,
 summary(reg6)
 stargazer(reg6)
 
-### Filtered by  Supermarket + chain + city + competition + same producerr
+### Filtered by  Supermarket + chain + city + competition + same producer
 reg7 <- felm(SD.RSuperTodo ~ Time + Time2 + PAve.RSuperTodo | Product | 0 | Product, dbF)
 summary(reg7)
 stargazer(reg7)
+
+### Competition and same producer dispersion regression
+reg8 <- felm(SD.CompVar ~ Time + Time2 + Ave.CompVar | Product | 0 | Product, dbF)
+summary(reg8)
+stargazer(reg8)
+
 
 
 ### Print regression outputs
@@ -106,6 +112,9 @@ print("#### Filtered by supermarket, chain, city, competition, and same producer
 print(summary(reg7), include.rownames=F)
 sink()
 
+print("#### Competition and same producer dispersion regression ####")
+print(summary(reg8), include.rownames=F)
+sink()
 
 
 
