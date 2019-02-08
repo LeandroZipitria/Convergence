@@ -119,336 +119,241 @@ sink()
 
 
 
-reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + Product, data = dbF)
-vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
-reg2C <- coeftest(reg2, vcov_R2)
-reg2C
-summary(reg2)
-reg1b <- summary(felm(DifPrice ~ Distance + DifCity + SameChain + Product + Time 
-                     | CityR + CityL | 0 | Product + CityR + CityL + Time, dfP))
+######## ------------------------------
+### New regressions -------------------
 
-#sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
-sink("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-print("##########################################
-      Regresion for all database #####")
-print("#### salida base")
-print(summary(reg1), include.rownames=F)
-print("#### salida base: cluster")
-print(reg1C, include.rownames=F)
-sink()
-
-#sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
-sink("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-print("##########################################
-      Regresion for all database #####")
-print("#### Filtrada competencia y variedad")
-print(summary(reg2), include.rownames=F)
-print("#### salida base: cluster")
-print(reg2C, include.rownames=F)
-sink()
-
-
-
-
-
-
-
-
-
-
-
-
-
-########################################################
-#### (2) Regressions for supermarkets in Montevideo ####
-
-# Load database
-#dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedMontevideo.csv", data.table = F)
-dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedMontevideo.csv", data.table = F)
-
-head(dbF)
-
-
-## Run base regression 
-
-dbF$Product <- as.factor(dbF$Product)
-dbF$Super <- dbF$moda <- dbF$chain.number <- dbF$city.number <- dbF$X_UTM <- dbF$Y_UTM <-  NULL
-dbF <- na.omit(dbF)
-dbF$SD.Base <- dbF$SD.Base * 100
-dbF$SD.RCompVar <- dbF$SD.RCompVar *100 
-dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
-#dbF$Time3 <- dbF$Time * dbF$Time2
-#dbF$Time4 <- dbF$Time2 * dbF$Time2
-dbF <- dbF[dbF$Time <90,]
-
-
-#reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
-summary(reg1b)
-
-## Test for autocorrelation
-
-reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-reg1C
-
-## with competition and variety
-
-
-reg4b <- plm(SD.RCompVar ~ Time + Time2 +
-               PAve.RCompVar,dbF, index=("Product"))
-
-## Test for autocorrelation
-
-reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-reg4C
-
-#############################################################################################################
-
-#### Otra prueba por cluster !!!
-
-reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
-reg1C <- coeftest(reg1, vcov_R1)
-reg1C
-summary(reg1)
-
-## with competition and variety
-
-reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + as.factor(Product), data = dbF)
-vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
-reg2C <- coeftest(reg2, vcov_R2)
-reg2C
-summary(reg2)
-
-#sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
-sink("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-print("##########################################
-      Regresion for Supermarkets in Montevideo #####")
-print("#### salida base")
-print(summary(reg1), include.rownames=F)
-print("#### salida base: cluster")
-print(reg1C, include.rownames=F)
-sink()
-
-#sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
-sink("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-print("##########################################
-      Regresion for Supermarkets in Motnevideo #####")
-print("#### Filtrada competencia y variedad")
-print(summary(reg2), include.rownames=F)
-print("#### salida base: cluster")
-print(reg2C, include.rownames=F)
-sink()
-
-
-##########################################################
-######## (3) Regressions for supermarkets in 2007 ########
+# ----------------------
+## Restricted supers and goods at the begining
 
 # Load database
 dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
-#dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
+#dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
 
 head(dbF)
 
 
-#### Previous operations
+#### Previous operations  
 dbF$Product <- as.factor(dbF$Product)
 dbF$Super <- dbF$moda <- dbF$chain.number <- dbF$city.number <- dbF$X_UTM <- dbF$Y_UTM <-  NULL
 dbF <- na.omit(dbF)
 dbF$SD.Base <- dbF$SD.Base * 100
 dbF$SD.RCompVar <- dbF$SD.RCompVar *100 
 dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
-#dbF$Time3 <- dbF$Time * dbF$Time2
-#dbF$Time4 <- dbF$Time2 * dbF$Time2
 dbF <- dbF[dbF$Time <90,]
-dbF$SD.CompVar <- dbF$SD.CompVar * 100
- 
-
-# #### Base regression 
-# #reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-# reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
-# summary(reg1b)
-# # Test for autocorrelation
-# reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-# reg1C
-# 
-# #### With competition and variety
-# reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
-# # Test for autocorrelation
-# reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-# reg4C
+prodorig <- unique(dbF[dbF$Year == 2007,]$Product)
 
 
-#### Clustered standard errors
+## Change name of variable
+colnames(dbF)[colnames(dbF) == "SD.RSuperCCCV"] <- "SD.R_CCCV"
+colnames(dbF)[colnames(dbF) == "PAve.RSuperCCCV"] <- "PAve.R_CCCV"
 
-### Base regression 
-reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
-reg1C <- coeftest(reg1, vcov_R1)
-reg1C
+
+#### Clustered standard errors regressions
+
+### Base regression
+reg1 = felm(SD.Base ~ Time + Time2 + PAve | Product | 0 | Product, dbF[dbF$Product %in% prodorig,])
 summary(reg1)
 
-### Filtered by competition and variety
-reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + as.factor(Product), data = dbF)
-vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
-reg2C <- coeftest(reg2, vcov_R2)
-reg2C
+### Filtered by competition and same producer
+reg2 <- felm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar | Product | 0 | Product, dbF[dbF$Product %in% prodorig,])
 summary(reg2)
 
-### Base regression control for time 44
-reg1 <- lm(SD.Base ~ Time + Time2 + PAve + P44 +as.factor(Product), data = dbF)
-vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
-reg1C <- coeftest(reg1, vcov_R1)
-reg1C
-summary(reg1)
-
-### Filtered by competition and variety, control for time 44
-reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + P44 + as.factor(Product), data = dbF)
-vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
-reg2C <- coeftest(reg2, vcov_R2)
-reg2C
-summary(reg2)
+### Competition and same producer dispersion regression
+reg3 <- felm(SD.CompVar ~ Time + Time2 + Ave.CompVar | Product | 0 | Product, dbF[dbF$Product %in% prodorig,])
+summary(reg3)
 
 
-### Competition and variety on the LHS
-reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + as.factor(Product), data = dbF)
-vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
-reg5C <- coeftest(reg5, vcov_R5)
-reg5C
-summary(reg5)
-
-### Competition and variety on the LHS, control for time 44
-reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + P44 + as.factor(Product), data = dbF)
-vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
-reg5C <- coeftest(reg5, vcov_R5)
-reg5C
-summary(reg5)
-
-
-
-#sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
-sink("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
+### Print regression outputs
+sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaSD_2019_V2.txt", append = T)
 print("##########################################
-      Regresion for Supermarkets in 2007 #####")
-print("#### salida base")
+      Regresion for supermarkets and products in 2007 #####")
+print("#### Main Regression ####")
 print(summary(reg1), include.rownames=F)
-print("#### salida base: cluster")
-print(reg1C, include.rownames=F)
-sink()
+print(reg1$N, include.rownames=F)
 
-#sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
-sink("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-print("##########################################
-      Regresion for Supermarkets in 2007 #####")
-print("#### Filtrada competencia y variedad")
+print("#### Filtered by competition and same producer ####")
 print(summary(reg2), include.rownames=F)
-print("#### salida base: cluster")
-print(reg2C, include.rownames=F)
+print(reg2$N, include.rownames=F)
+
+print("#### SD of competition and variety !!! ####")
+print(summary(reg3), include.rownames=F)
+print(reg3$N, include.rownames=F)
 sink()
 
 
-########################################################################
-######## (4) Regressions for supermarkets in 2007 in Montevideo ########
+# ----------------------
+## Complete database
+
+# Load database
+dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
+#dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
+
+head(dbF)
+
+
+#### Previous operations  
+dbF$Product <- as.factor(dbF$Product)
+dbF$Super <- dbF$moda <- dbF$chain.number <- dbF$city.number <- dbF$X_UTM <- dbF$Y_UTM <-  NULL
+dbF <- na.omit(dbF)
+dbF$SD.Base <- dbF$SD.Base * 100
+dbF$SD.RCompVar <- dbF$SD.RCompVar *100 
+dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
+
+dbF <- dbF[dbF$Time <90,]
+
+
+## Change name of variable
+colnames(dbF)[colnames(dbF) == "SD.RSuperCCCV"] <- "SD.R_CCCV"
+colnames(dbF)[colnames(dbF) == "PAve.RSuperCCCV"] <- "PAve.R_CCCV"
+
+
+#### Clustered standard errors regressions
+
+### Base regression
+reg1 = felm(SD.Base ~ Time + Time2 + PAve | Product | 0 | Product, dbF)
+summary(reg1)
+
+### Filtered by competition and same producer
+reg2 <- felm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar | Product | 0 | Product, dbF)
+summary(reg2)
+
+### Competition and same producer dispersion regression
+reg3 <- felm(SD.CompVar ~ Time + Time2 + Ave.CompVar | Product | 0 | Product, dbF)
+summary(reg3)
+
+
+### Print regression outputs
+sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaSD_2019_V2.txt", append = T)
+print("##########################################
+      Regresion for all supermarkets and products #####")
+print("#### Main Regression ####")
+print(summary(reg1), include.rownames=F)
+print(reg1$N, include.rownames=F)
+
+print("#### Filtered by competition and same producer ####")
+print(summary(reg2), include.rownames=F)
+print(reg2$N, include.rownames=F)
+
+print("#### SD of competition and variety !!! ####")
+print(summary(reg3), include.rownames=F)
+print(reg3$N, include.rownames=F)
+sink()
+
+
+# ----------------------
+## Restricted supers and goods at the begining for Montevideo
 
 # Load database
 dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginMdeo.csv", data.table = F)
-#dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
+#dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
 
 head(dbF)
 
 
-##### Previous operations
+#### Previous operations  
 dbF$Product <- as.factor(dbF$Product)
 dbF$Super <- dbF$moda <- dbF$chain.number <- dbF$city.number <- dbF$X_UTM <- dbF$Y_UTM <-  NULL
 dbF <- na.omit(dbF)
 dbF$SD.Base <- dbF$SD.Base * 100
 dbF$SD.RCompVar <- dbF$SD.RCompVar *100 
 dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
-#dbF$Time3 <- dbF$Time * dbF$Time2
-#dbF$Time4 <- dbF$Time2 * dbF$Time2
+dbF <- dbF[dbF$Time <90,]
+prodorig <- unique(dbF[dbF$Year == 2007,]$Product)
+
+
+## Change name of variable
+colnames(dbF)[colnames(dbF) == "SD.RSuperCCCV"] <- "SD.R_CCCV"
+colnames(dbF)[colnames(dbF) == "PAve.RSuperCCCV"] <- "PAve.R_CCCV"
+
+
+#### Clustered standard errors regressions
+
+### Base regression
+reg1 = felm(SD.Base ~ Time + Time2 + PAve | Product | 0 | Product, dbF[dbF$Product %in% prodorig,])
+summary(reg1)
+
+### Filtered by competition and same producer
+reg2 <- felm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar | Product | 0 | Product, dbF[dbF$Product %in% prodorig,])
+summary(reg2)
+
+### Competition and same producer dispersion regression
+reg3 <- felm(SD.CompVar ~ Time + Time2 + Ave.CompVar | Product | 0 | Product, dbF[dbF$Product %in% prodorig,])
+summary(reg3)
+
+
+### Print regression outputs
+sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaSD_2019_V2.txt", append = T)
+print("##########################################
+      Regresion for supermarkets and products in 2007 in MONTEVIDEO #####")
+print("#### Main Regression ####")
+print(summary(reg1), include.rownames=F)
+print(reg1$N, include.rownames=F)
+
+print("#### Filtered by competition and same producer ####")
+print(summary(reg2), include.rownames=F)
+print(reg2$N, include.rownames=F)
+
+print("#### SD of competition and variety !!! ####")
+print(summary(reg3), include.rownames=F)
+print(reg3$N, include.rownames=F)
+sink()
+
+
+
+# ----------------------
+## All goods and supermarkets for Montevideo
+
+# Load database
+dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedMontevideo.csv", data.table = F)
+#dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
+
+head(dbF)
+
+
+#### Previous operations  
+dbF$Product <- as.factor(dbF$Product)
+dbF$Super <- dbF$moda <- dbF$chain.number <- dbF$city.number <- dbF$X_UTM <- dbF$Y_UTM <-  NULL
+dbF <- na.omit(dbF)
+dbF$SD.Base <- dbF$SD.Base * 100
+dbF$SD.RCompVar <- dbF$SD.RCompVar *100 
+dbF$P44 <- ifelse(dbF$Time > 43, 1, 0)
 dbF <- dbF[dbF$Time <90,]
 
 
-# #### Base regression 
-# #reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-# reg1b <- plm(SD.Base ~ Time + Time2 + PAve, dbF, index = ("Product"))
-# summary(reg1b)
-# # Test for autocorrelation
-# reg1C <- coeftest(reg1b,vcov = vcovHC(reg1b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-# reg1C
-# 
-# 
-# #### Prices filtered by competition and variety
-# reg4b <- plm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar,dbF, index=("Product"))
-# # Test for autocorrelation
-# reg4C <- coeftest(reg4b,vcov = vcovHC(reg4b,method = "arellano")) #, vcovHC(reg1, type = "HAC"))
-# reg4C
+## Change name of variable
+colnames(dbF)[colnames(dbF) == "SD.RSuperCCCV"] <- "SD.R_CCCV"
+colnames(dbF)[colnames(dbF) == "PAve.RSuperCCCV"] <- "PAve.R_CCCV"
 
 
-#### Clustered standard errors
+#### Clustered standard errors regressions
 
-### Base regression 
-reg1 <- lm(SD.Base ~ Time + Time2 + PAve + as.factor(Product), data = dbF)
-vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
-reg1C <- coeftest(reg1, vcov_R1)
-reg1C
+### Base regression
+reg1 = felm(SD.Base ~ Time + Time2 + PAve | Product | 0 | Product, dbF)
 summary(reg1)
 
-### Filtered by competition and variety
-reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + as.factor(Product), data = dbF)
-vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
-reg2C <- coeftest(reg2, vcov_R2)
-reg2C
+### Filtered by competition and same producer
+reg2 <- felm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar | Product | 0 | Product, dbF)
 summary(reg2)
 
-### Base regression control for time 44
-reg1 <- lm(SD.Base ~ Time + Time2 + PAve + P44 +as.factor(Product), data = dbF)
-vcov_R1 <- cluster.vcov(reg1, dbF$Product) #cbind(, SD.BaseM$Product))
-reg1C <- coeftest(reg1, vcov_R1)
-reg1C
-summary(reg1)
-
-### Filtered by competition and variety, control for time 44
-reg2 <- lm(SD.RCompVar ~ Time + Time2 + PAve.RCompVar + P44 + as.factor(Product), data = dbF)
-vcov_R2 <- cluster.vcov(reg2, dbF$Product) #cbind(, SD.BaseM$Product))
-reg2C <- coeftest(reg2, vcov_R2)
-reg2C
-summary(reg2)
+### Competition and same producer dispersion regression
+reg3 <- felm(SD.CompVar ~ Time + Time2 + Ave.CompVar | Product | 0 | Product, dbF)
+summary(reg3)
 
 
-### Competition and variety on the LHS
-reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + as.factor(Product), data = dbF)
-vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
-reg5C <- coeftest(reg5, vcov_R5)
-reg5C
-summary(reg5)
-
-### Competition and variety on the LHS, control for time 44
-reg5 <- lm(SD.CompVar ~ Time + Time2 + Ave.CompVar + P44 + as.factor(Product), data = dbF)
-vcov_R5 <- cluster.vcov(reg5, dbF$Product) #cbind(, SD.BaseM$Product))
-reg5C <- coeftest(reg5, vcov_R5)
-reg5C
-summary(reg5)
-
-
-#sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
-sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-#sink("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-print("#####################################################
-      Regresion for Supermarkets in 2007 in Montevideo #####")
-print("#### salida base")
+### Print regression outputs
+sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaSD_2019_V2.txt", append = T)
+print("##########################################
+      Regresion for ALL supermarkets and products in MONTEVIDEO #####")
+print("#### Main Regression ####")
 print(summary(reg1), include.rownames=F)
-print("#### salida base: cluster")
-print(reg1C, include.rownames=F)
+print(reg1$N, include.rownames=F)
+
+print("#### Filtered by competition and same producer ####")
+print(summary(reg2), include.rownames=F)
+print(reg2$N, include.rownames=F)
+
+print("#### SD of competition and variety !!! ####")
+print(summary(reg3), include.rownames=F)
+print(reg3$N, include.rownames=F)
 sink()
 
-#sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaAll.txt", append = T)
-sink("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-#sink("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Salidas/salidaCluster.txt", append = T)
-print("######################################################
-       Regresion for Supermarkets in 2007 in Montevideo #####")
-print("#### Filtrada competencia y variedad")
-print(summary(reg2), include.rownames=F)
-print("#### salida base: cluster")
-print(reg2C, include.rownames=F)
-sink()

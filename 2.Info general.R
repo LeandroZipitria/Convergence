@@ -1,7 +1,7 @@
 ## Load database
 
-dbF <- get(load("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResiduals.Rdata"))
-#dbF <- get(load("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsRev.Rdata"))
+dbF <- readRDS("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResiduals.rds")
+dbF <- readRDS("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResiduals.rds")
 
 head(dbF)
 
@@ -26,25 +26,49 @@ write.csv(a, file="/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price converg
 categories <- unique(categ$Category)
 
 
+
 #### 2) Check information of supermarkets ####
 
 ## Load database
-db <- fread("/home/lzipitria/Dropbox/Docs/Investigacion/2016.Distance and quality/Bases/2018.New/2018_dbase_with_super.csv", data.table = F)
+#db <- fread("/home/lzipitria/Dropbox/Docs/Investigacion/2016.Distance and quality/Bases/2018.New/2018_dbase_with_super.csv", data.table = F)
+
+library(zoo)
+
+dbF$MonthYear <- zoo::as.Date(as.yearmon(with(dbF, paste(Year, Month,sep="-")), "%Y-%m"))
+colnames(dbF)
+MY <- unique(dbF[, c(5,25)])
+
 
 # count the first observation for each supermarket
-su <- aggregate(db$Time, list(db$Super), min)
-colnames(su) <- c("Super", "StartTime")
+su <- aggregate(dbF$Time, list(dbF$Super), min)
+colnames(su) <- c("Super", "Date")
 
-h = hist(su$StartTime) # or hist(x,plot=FALSE) to avoid the plot of the histogram
+h = hist(su$Date) # or hist(x,plot=FALSE) to avoid the plot of the histogram
 h$density = h$counts/sum(h$counts)*100
 plot(h,freq=FALSE, main = NULL, ylim = c(0,80), xlim = c(0, 100),
      xlab = "Time", ylab = "Relative Frequency", col = "gray81")
+
+h1 <- hist(su$StartTime)
+
+# Time series
+library(data.table)
+prueba <- setDT(dbF)[, list(Super=uniqueN(Super)), by= Time] # count number of supermarket by time
+prueba <- merge(prueba, MY, by = "Time")
+prueba <- prueba[prueba$Time != "90",]
+plot(prueba$MonthYear, prueba$Super, type = "l", ylim = c(150, 400), lwd = 2,
+     xlab = "Time", ylab = "Number of Supermarkets")
+
+
+
 
 
 
 #### 3) Dispersion in time ####
 
 dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
+dbF <- fread("C://Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
+
+
 dbF <- na.omit(dbF)
 
 dbF <- dbF[dbF$Time <90,]
@@ -89,6 +113,11 @@ color = c("blue", "gray21")
 legend("topleft", c("Original", "Filtered by Competition and Variety"), bty = "n", #draw no box
        xpd = TRUE, # draw legend outside box
        cex = 1, pt.cex = 1.5,  y.intersp = 0.6, fill = color)
+
+
+
+
+
 
 
 ## 4) Dispersion in time (original data) #####
