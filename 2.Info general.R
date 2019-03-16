@@ -60,96 +60,46 @@ plot(prueba$MonthYear, prueba$Super, type = "l", ylim = c(150, 400), lwd = 2,
 
 
 
-
-
-
 #### 3) Dispersion in time ####
+library(data.table)
 
-dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
-dbF <- fread("C://Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
+# Load database of original supermarkets and restrict poducts 
+dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
+dbFM <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginMdeo.csv", data.table = F)
 
+#dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
 
 dbF <- na.omit(dbF)
-
 dbF <- dbF[dbF$Time <90,]
+prodorig <- unique(dbF[dbF$Year == 2007,]$Product)
+dbF <- dbF[dbF$Product %in% prodorig, ]
 
-dbF$filteredBase <- residuals(lm(SD.Base ~ as.factor(Product), data = dbF))
-dbF$filteredVarComp <- residuals(lm(SD.RCompVar ~ as.factor(Product), data = dbF))
+dbFM <- na.omit(dbFM)
+dbFM <- dbFM[dbFM$Time <90,]
+prodorig <- unique(dbFM[dbFM$Year == 2007,]$Product)
+dbFM <- dbFM[dbFM$Product %in% prodorig, ]
+
+# dbF$filteredBase <- residuals(lm(SD.Base ~ as.factor(Product), data = dbF))
+# dbF$filteredVarComp <- residuals(lm(SD.RCompVar ~ as.factor(Product), data = dbF))
 
 
 # All series
-tbd <- aggregate(dbF$SD.Base/100, by = list(dbF$Time), median)
+tbd <- aggregate(dbF$SD.Base, by = list(dbF$Time), median)
 lm_tbd <- lm(tbd$x ~ tbd$Group.1)
 
-tbd2 <- aggregate(dbF$SD.RCompVar/100, by = list(dbF$Time), median)
+tbd2 <- aggregate(dbFM$SD.Base, by = list(dbFM$Time), median)
 lm_tbd2 <- lm(tbd2$x ~ tbd2$Group.1)
 
 #
-plot(tbd,main = NULL, xlim = c(0, 100), ylim= c(0.05, 0.1),
-     xlab = "Time", ylab = "Median SD", col = "blue")
+plot(tbd,main = NULL, xlim = c(0, 100), ylim=c(4,8),
+     xlab = "Time", ylab = "Median SD (in %)", col = "blue", cex.lab=1.2)
 abline(coef(lm_tbd), lwd = 2, col = "blue")
 points(tbd2, col = "gray21")
 abline(coef(lm_tbd2), lwd = 2, col = "gray21")
 color = c("blue", "gray21")
-legend("topleft", c("Original", "Filtered by Competition and Variety"), bty = "n", #draw no box
+legend(60,8, c("Country", "Montevideo City"), bty = "n", #draw no box
        xpd = TRUE, # draw legend outside box
-       cex = 1, pt.cex = 1.5,  y.intersp = 0.6, fill = color)
-
-
-# Filtered series by product
-tbd <- aggregate(dbF$filteredBase/100, by = list(dbF$Time), median)
-lm_tbd <- lm(tbd$x ~ tbd$Group.1)
-
-tbd2 <- aggregate(dbF$filteredVarComp/100, by = list(dbF$Time), median)
-lm_tbd2 <- lm(tbd2$x ~ tbd2$Group.1)
-
-#
-plot(tbd,main = NULL, xlim = c(0, 100), ylim= c(-0.008, 0.008),
-     xlab = "Time", ylab = "Median SD", col = "blue")
-abline(coef(lm_tbd), lwd = 2, col = "blue")
-points(tbd2, col = "gray21")
-abline(coef(lm_tbd2), lwd = 2, col = "gray21")
-color = c("blue", "gray21")
-legend("topleft", c("Original", "Filtered by Competition and Variety"), bty = "n", #draw no box
-       xpd = TRUE, # draw legend outside box
-       cex = 1, pt.cex = 1.5,  y.intersp = 0.6, fill = color)
-
-
-
-
-
-
-
-## 4) Dispersion in time (original data) #####
-
-dbF <- fread("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedAll.csv", data.table = F)
-dbF <- fread("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018.RestrictedOriginal.csv", data.table = F)
-
-dbF <- na.omit(dbF)
-
-dbF <- dbF[dbF$Time <90,]
-
-dbF$filteredBase <- residuals(lm(SD.Base ~ as.factor(Product), data = dbF))
-dbF$filteredVarComp <- residuals(lm(SD.RCompVar ~ as.factor(Product), data = dbF))
-
-
-# All series
-tbd <- aggregate(dbF$SD.Base/100, by = list(dbF$Time), median)
-lm_tbd <- lm(tbd$x ~ tbd$Group.1)
-
-tbd2 <- aggregate(dbF$SD.RCompVar/100, by = list(dbF$Time), median)
-lm_tbd2 <- lm(tbd2$x ~ tbd2$Group.1)
-
-#
-plot(tbd,main = NULL, xlim = c(0, 100), ylim= c(0.05, 0.1),
-     xlab = "Time", ylab = "Median SD", col = "blue")
-abline(coef(lm_tbd), lwd = 2, col = "blue")
-points(tbd2, col = "gray21")
-abline(coef(lm_tbd2), lwd = 2, col = "gray21")
-color = c("blue", "gray21")
-legend("topleft", c("Original", "Filtered by Competition and Variety"), bty = "n", #draw no box
-       xpd = TRUE, # draw legend outside box
-       cex = 1, pt.cex = 1.5,  y.intersp = 0.6, fill = color)
+       cex = 1.2, pt.cex = 1.5,  y.intersp = 0.8, fill = color)
 
 
 # Filtered series by product
