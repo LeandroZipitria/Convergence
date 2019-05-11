@@ -121,7 +121,7 @@ legend("topleft", c("Original", "Filtered by Competition and Variety"), bty = "n
        cex = 1, pt.cex = 1.5,  y.intersp = 0.6, fill = color)
 
 
-## (5) VAriety and competition ####
+## (5) Variety and competition ####
 
 dbF <- get(load("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsRev.Rdata"))
 dbF <- get(load("C:/Users/leandro/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResidualsRev.Rdata"))
