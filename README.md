@@ -13,10 +13,9 @@ The order of files, and its explanation, is as follow:
 1) 0.Bases.Convergence.R: run the regressions of the price database to filter the series and store the residuals. 
 
 2) 1.CreateSDbase.R: estimate standard deviation and mode for price and residual series.
- 
+
 3) 2.Info.general.R: create the figures (can be safely ignored) 
 
 4) 3.Regressions.R: regressions of price (equation 1 of the Paper)
 
 5) 4.RegressionSD.R: the main regressions of the paper (equation 2)
-
