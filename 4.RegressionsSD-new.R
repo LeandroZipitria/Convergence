@@ -5,8 +5,7 @@
 ## Load libraries used
 library(stargazer)
 library(lfe)
-library(data.table) 
-
+library(data.table)
 
 #setwd("/home/lzipitria/Dropbox/Docs/Investigacion/2018.Price convergence/Rutinas/")
 
