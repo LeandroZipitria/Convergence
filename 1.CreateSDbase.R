@@ -46,7 +46,7 @@ functions <- function(){
     group_by(Product, Time) %>%
     mutate(PAve.RCompVar = ave(RCompVar))
 
-## 5) Filtered by supermarket, chain, and city
+## 5) Filtered by supermarket, chain, and city 
   db <- db %>%
     group_by(Product, Time) %>%
     mutate(SD.RSuperCC = sd(RSuperCC)) 

@@ -4,7 +4,7 @@
 ## Libraries used
 
 library("lfe")
-library(stargazer)
+library(stargazer) 
 
 ## Load database
 dbF <- readRDS("~/Dropbox/Docs/Investigacion/2018.Price convergence/Bases/2018BaseResiduals.rds")
