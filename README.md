@@ -1,6 +1,7 @@
-# Long Run Price or Basket Convergence?
+# Assessing Long-Run Price Convergence in Retailing
 
-This folder has the code files for the paper "Long Run Price or Basket Convergence?" by Fernando Borraz and Leandro Zipitría.
+This folder has the code files for the paper "Assessing Long-Run Price Convergence in Retailing" by Fernando Borraz and Leandro Zipitría.
+
 The original database has information of:
 
 - an index of each store, product, time, city, and department (Uruguayan states)
@@ -8,7 +9,7 @@ The original database has information of:
 - a count variable of the number of competition and brands for each triple
 
 
-The order of files, and its explanation, is as follow:
+The order of files, and its explanation, is as follow (TBReviewed):
 
 1) 0.Bases.Convergence.R: run the regressions of the price database to filter the series and store the residuals. 
 
