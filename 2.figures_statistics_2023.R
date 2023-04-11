@@ -28,12 +28,73 @@ head(db)
 cpi <- fread("../../Bases/CPI.csv", data.table = F) # casa
 
 
+
+# Descriptive statistics --------------------------------------------------
+
+
+# Price database
+db <- fread("../../Bases/2023BaseResiduals.csv", data.table = F)
+head(db)
+
+
+# Price dispersion database
+dbDisp <- fread("../../Bases/2023.RestrictedAll.csv", data.table = F)
+head(dbDisp)
+
+# Price dispersion chains database
+dbsup <- fread("../../Bases/2023.RestrictedAll.chains.csv", data.table = F)
+head(dbDisp)
+
+
+# Adjusted log price
+mean(db$PMode_r)
+sd(db$PMode_r)
+
+# CV Price
+mean(dbDisp$CV.PReal,na.rm = T)
+sd(dbDisp$CV.PReal,na.rm = T)
+
+# Entropy
+mean(dbDisp$CatDisp)
+sd(dbDisp$CatDisp)
+
+# Competing stores
+mean(dbDisp$num_strs_comp)
+sd(dbDisp$num_strs_comp)
+
+# Number of observations price database
+nrow(db)
+
+# Number of stores
+length(unique(db$Super))
+
+# Number of Chains
+length(unique(db$chain))-1
+
+# Number of markets
+length(unique(db$city2))
+
+# Number of Products
+length(unique(db$Product))
+
+# Number of Categories
+length(unique(db$Category))
+
+# Entropy for chains
+mean(dbsup[dbsup$is.chain == "Chains",]$CatDisp)
+sd(dbsup[dbsup$is.chain == "Chains",]$CatDisp)
+
+# Entropy index for independent stores
+mean(dbsup[dbsup$is.chain == "Indep.",]$CatDisp)
+sd(dbsup[dbsup$is.chain == "Indep.",]$CatDisp)
+
+
 ##### Plot time effects
 
 db$ProdTime <- as.factor(interaction(db$Product, db$Time))
 
 ## Coeff variation
-rgCV <-  feols(CV.Base ~ as.factor(Time) | Product, data = db)
+rgCV <-  feols(CV.Trend ~ as.factor(Time) | Product + city, data = db)
 summary(rgCV)
 names(rgCV$coefficients) <- gsub("as.factor\\(Time\\)","Time ",names(rgCV$coefficients))
 jtools::plot_coefs(rgCV, cluster = c("ProdTime"))

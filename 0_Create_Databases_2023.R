@@ -9,8 +9,10 @@
 
 library("data.table") 
 library("dplyr")
+library(stringi)
+
 ## load price database
-dbase <- fread("../../Bases/Base2021MonthlyClean.csv", data.table = F)
+dbase <- fread("../../Bases/Base2022MonthlyClean.csv", data.table = F)
 dbase$Time <- (as.numeric(dbase$Year) -2007) * 12 + as.numeric(dbase$Month) - 3
 dbase <- dbase[dbase$Time >0,]
 fivenum(dbase$Time)
@@ -20,11 +22,6 @@ table(dbase$Product)
 # order the database
 dbase <- dbase[order(dbase$Super, dbase$Year, dbase$Month),]
 
-###
-
-## logs of prices
-dbase$moda <- log(dbase$PMode)
-dbase$PMode <- NULL
 
 ## Add information of Category
 library(readxl)
@@ -57,25 +54,35 @@ table(dbase$Category, dbase$Variety)
 
 
 ## Load database
-supers <- fread("../../Bases/Establecimiento2021.csv",data.table = F)
+supers <- fread("../../Bases/Establecimiento2023.csv",data.table = F, encoding = "Latin-1")
+
+# Clean Spanish names
+supers <- as.data.table(supers)[, "ciudad" := stri_trans_general(str = ciudad, 
+                                   id = "Latin-ASCII")]
+supers <- as.data.table(supers)[, "barrio" := stri_trans_general(str = barrio, 
+                                                                 id = "Latin-ASCII")]
+supers <- as.data.table(supers)[, "depto" := stri_trans_general(str = depto, 
+                                                                 id = "Latin-ASCII")]
+supers <- as.data.table(supers)[, "cadena" := stri_trans_general(str = cadena, 
+                                                                 id = "Latin-ASCII")]
 head(supers)
 colnames(supers)
-supers <- supers[,c(1,7,8,11,12)]
-table(supers$ciudad)
-Encoding(supers$ciudad) <- "UTF-8"
-supers$ciudad <- iconv(supers$ciudad, "UTF-8", "UTF-8",sub='') ## replace any non UTF-8 by ''
-table(supers$depto)
-Encoding(supers$depto) <- "UTF-8"
-supers$depto <- iconv(supers$depto, "UTF-8", "UTF-8",sub='') ## replace any non UTF-8 by ''
-table(supers$cadena)
-supers[297,3] <- "Geant"
-supers[391,3] <- "Geant"
+
+#Select columns
+supers <- supers[,c(1,6,7,8,11,12)] #id,barrio,cajas,cadena,ciudad,depto
+
+# Erase farmacies
 farm <- c("San Roque","Pigalle","Farmashop","FarmaGlobal")
 supers$farmacia <- ifelse(supers$cadena %in% farm,1,0)
+table(supers$farmacia)
 rm(farm)
 
-colnames(supers) <- c("Super", "cashiers", "chain", "city", "depto", "is.farmacy") ## the information needed to merge
+# Rename columns
+colnames(supers) <- c("Super","neighbhd", "cashiers", "chain", "city", "depto","is.farmacy") ## the information needed to merge
 supers <- supers[order(as.numeric(supers$Super)) ,] # order by supermarket
+
+# Create city Montevideo with CCZ
+supers$city2 <- ifelse(supers$depto == "Montevideo",paste0(supers$city,supers$neighbhd),supers$city)
 
 
 ######## Supermarkets
@@ -93,22 +100,29 @@ rm(supers.dbase, supers.supers)
 # Supermarket 386 is repeated, delete it
 supers <- supers[supers$Super != 386,]
 
+
+
 ## Merge databases
 # Exclude those supermarkets not in both bases. If want to include only supermarkets
 # in price base, include all.x = TRUE
 
-dbase <- merge(dbase, supers, by = "Super") # Merge cola and supermarket bases
+dbase <- setDT(dbase)[setDT(supers), on=c("Super"),]
+
 rm(supers, not.in.prices, not.in.supers, in.both)
 dbase <- dbase[dbase$is.farmacy ==0,]
 table(dbase$is.farmacy)
 dbase$is.farmacy <- NULL
 
+# chech cities
+table(dbase$city2)
+
+head(dbase)
 
 ## Export databases
 fwrite(dbase, "../../Bases/2023_dbase.csv", row.names = FALSE)
 rm(dbase)
 
 
-### Continue on file: 0.Bases.Convergence_2023.R
+### Continue on file: 0.5.Bases.Convergence_2023_v2.R
 
 # ---------------- End of script ---------------
